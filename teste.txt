@@ -1,0 +1,17 @@
+// Função para enviar a URL para o backend
+async function scanURL(url) {
+    try {
+        const response = await fetch('/api/scan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url }),
+        });
+
+        const result = await response.json();
+        displayResults(result);
+    } catch (error) {
+        console.error("Erro ao escanear a URL:", error);
+    }
+}

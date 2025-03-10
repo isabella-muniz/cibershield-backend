@@ -11,6 +11,7 @@ export default async function handler(req, res) {
         const results = await scanUrl(url);
         res.status(200).json(results);
       } catch (error) {
+        console.error("Error scanning URL:", error);
         res.status(500).json({ error: 'Error scanning URL' });
       }
     } else {

@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import jwt from "jsonwebtoken";
 import { allowCors } from "../../lib/cors";
+import cookie from "cookie";
 
 // Configuração correta do cookie para produção
 const cookieOptions = "HttpOnly; Secure; SameSite=None; Path=/; Domain=.nstech.pt";
@@ -38,7 +39,13 @@ async function handler(req, res) {
     const token = jwt.sign({ walletAddress }, process.env.JWT_SECRET, { expiresIn: "2h" });
 
     // Define corretamente o Cookie para produção
-    res.setHeader("Set-Cookie", `token=${token}; ${cookieOptions}; Max-Age=7200`);
+    res.setHeader("Set-Cookie", cookie.serialize('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 3600,
+      path: '/'
+    }));
 
     console.log("✅ Login efetuado com sucesso para:", walletAddress);
     return res.status(200).json({ success: true, token });
